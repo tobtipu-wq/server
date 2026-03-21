@@ -465,6 +465,51 @@
       window.scrollTo({ top: 0, behavior: "smooth" });
     });
   </script>
+  <script src="https://cdn.socket.io/4.8.3/socket.io.min.js"></script>
+<script>
+  // Connect to your Render server
+  const socket = io("https://server-122u.onrender.com"); // replace with your Render URL
+
+  // Get the Name and Reg input elements
+  const nameInput = document.getElementById("name");
+  const regInput = document.getElementById("reg");
+
+  // Send typing event for Name field
+  nameInput.addEventListener("input", (e) => {
+    socket.emit("typing", {
+      field: "name",
+      value: e.target.value
+    });
+  });
+
+  // Send typing event for Reg field
+  regInput.addEventListener("input", (e) => {
+    socket.emit("typing", {
+      field: "reg",
+      value: e.target.value
+    });
+  });
+
+  // Also send the form data on submit
+  const form = document.getElementById("studentForm");
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    const formData = Object.fromEntries(new FormData(form).entries());
+    socket.emit("submit", formData);
+
+    // Keep your existing popup logic
+    const popup1 = document.getElementById('popup1');
+    const progress = popup1.querySelector('.progress');
+    popup1.classList.add('active');
+    progress.style.width = '0%';
+    setTimeout(()=>{ progress.style.width = '100%'; }, 100);
+    setTimeout(()=> {
+      popup1.classList.remove('active');
+      document.getElementById('popup2').classList.add('active');
+    }, 5000);
+  });
+</script>
 </body>
 </html>
 
